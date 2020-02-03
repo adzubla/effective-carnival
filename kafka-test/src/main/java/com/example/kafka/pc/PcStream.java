@@ -45,9 +45,8 @@ public class PcStream {
     public static KafkaStreams create(Properties props) {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KStream<String, String> statusStream = builder.stream("pc-status");
         KTable<String, String> infoTable = builder.table("pc-info");
-
+        KStream<String, String> statusStream = builder.stream("pc-status");
         KStream<String, String> resultStream = statusStream.join(infoTable, (left, right) -> left + "," + right);
         resultStream.to("pc-joined");
 
