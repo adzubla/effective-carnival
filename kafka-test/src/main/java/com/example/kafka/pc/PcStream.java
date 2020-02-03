@@ -33,7 +33,6 @@ public class PcStream {
         });
 
         try {
-            System.out.println(streams);
             streams.start();
             latch.await();
         } catch (Throwable e) {
@@ -51,11 +50,9 @@ public class PcStream {
         resultStream.to("pc-joined");
 
         Topology topology = builder.build();
+        System.out.println("topology = " + topology.describe());
 
-        KafkaStreams streams = new KafkaStreams(topology, props);
-        System.out.println("streams = " + streams);
-
-        return streams;
+        return new KafkaStreams(topology, props);
     }
 
 }
