@@ -50,7 +50,7 @@ public class PcStream {
         resultStream.to("pc-joined");
 
         Topology topology = builder.build();
-        System.out.println("topology = " + topology.describe());
+        System.out.println(topology.describe());
 
         return new KafkaStreams(topology, props);
     }
