@@ -61,6 +61,9 @@ Topics:
 
     kafka-console-consumer --bootstrap-server localhost:9092 --topic pc-joined --property print.key=true --property key.separator=:
 
+## Topologia
+
+![Topologia](topology.png)
 
 ## Redis
 
