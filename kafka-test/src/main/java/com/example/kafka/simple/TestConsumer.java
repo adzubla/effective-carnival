@@ -12,10 +12,10 @@ public class TestConsumer {
 
     public static void main(String[] args) {
         Properties props = new Properties();
-        props.setProperty("bootstrap.servers", "localhost:9092");
-        props.setProperty("group.id", "test");
-        props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "test");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList("my-topic"));
