@@ -6,7 +6,8 @@ COPY ${DEPENDENCY}/BOOT-INF/classes /app
 COPY ${DEPENDENCY}/META-INF /app/META-INF
 COPY start.sh /
 RUN chmod +x start.sh
-USER 500
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 ENV STARTUP_WAIT_TIME=0
 ENTRYPOINT [ "./start.sh" ]
 EXPOSE 8081
