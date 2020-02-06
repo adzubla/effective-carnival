@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-spring-demo
+data:
+  application.properties: |-
+    spring.kafka.bootstrap-servers=${KAFKA_HOST}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-spring-demo-deployment
+spec:
+  selector:
+    matchLabels:
+      app: kafka-spring-demo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-spring-demo
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8081"
+        prometheus.io/scheme: "http"
+        prometheus.io/path: "/actuator/prometheus"
+        kiali.io/runtimes: springboot-tomcat,springboot-jvm,springboot-jvm-pool
+        co.elastic.logs/enabled: "true"
+    spec:
+      containers:
+        - name: kafka-spring-demo
+          image: tecban/kafka-spring-demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+              name: http
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: local
+            - name: KAFKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-creds
+                  key: kafka-host
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-spring-demo
+spec:
+  selector:
+    app: kafka-spring-demo
+  type: NodePort
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8081
+      targetPort: 8081
+      nodePort: 30080
+
+---
