@@ -20,7 +20,10 @@ public class PcStream {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-        final KafkaStreams streams = create(props);
+        Topology topology = createTopology();
+        System.out.println(topology.describe());
+
+        final KafkaStreams streams = new KafkaStreams(topology, props);
         final CountDownLatch latch = new CountDownLatch(1);
 
         // attach shutdown handler to catch control-c
@@ -41,7 +44,7 @@ public class PcStream {
         System.exit(0);
     }
 
-    public static KafkaStreams create(Properties props) {
+    public static Topology createTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         KTable<String, String> infoTable = builder.table("pc-info");
@@ -49,10 +52,7 @@ public class PcStream {
         KStream<String, String> resultStream = statusStream.join(infoTable, (left, right) -> left + "," + right);
         resultStream.to("pc-joined");
 
-        Topology topology = builder.build();
-        System.out.println(topology.describe());
-
-        return new KafkaStreams(topology, props);
+        return builder.build();
     }
 
 }
