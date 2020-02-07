@@ -7,14 +7,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @SpringBootApplication
-public class MyApplication {
+@EnableScheduling
+public class DemoApplication {
 
-    private static Logger LOG = LoggerFactory.getLogger(MyApplication.class);
+    private static Logger LOG = LoggerFactory.getLogger(DemoApplication.class);
 
     @Autowired
     BuildProperties buildProperties;
@@ -23,7 +25,7 @@ public class MyApplication {
     private Environment environment;
 
     public static void main(String[] args) {
-        SpringApplication.run(MyApplication.class, args);
+        SpringApplication.run(DemoApplication.class, args);
     }
 
     @PostConstruct

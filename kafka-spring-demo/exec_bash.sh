@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -it kafkatest_kafka_1 bash 
+docker exec -it kafkaspringdemo_kafka_1 bash 
