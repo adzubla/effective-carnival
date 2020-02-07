@@ -14,16 +14,12 @@ import java.util.concurrent.CountDownLatch;
 public class PcStream {
 
     public static void main(String[] args) {
-        Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "pc-stream");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        PcStream pcStream = new PcStream();
 
-        Topology topology = createTopology();
+        Topology topology = pcStream.getTopology();
         System.out.println(topology.describe());
 
-        final KafkaStreams streams = new KafkaStreams(topology, props);
+        final KafkaStreams streams = new KafkaStreams(topology, pcStream.getProperties());
         final CountDownLatch latch = new CountDownLatch(1);
 
         // attach shutdown handler to catch control-c
@@ -44,7 +40,18 @@ public class PcStream {
         System.exit(0);
     }
 
-    public static Topology createTopology() {
+    public Properties getProperties() {
+        Properties props = new Properties();
+
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "pc-stream");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+
+        return props;
+    }
+
+    public Topology getTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         KTable<String, String> infoTable = builder.table("pc-info");
