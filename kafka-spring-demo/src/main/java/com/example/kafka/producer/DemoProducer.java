@@ -38,7 +38,7 @@ public class DemoProducer {
         try {
             future.get();
         } catch (InterruptedException | ExecutionException ex) {
-            LOG.error("Unable to send value=[{}] due to: {}", value, ex);
+            LOG.error("Unable to send value={} due to: {}", value, ex);
         }
     }
 
@@ -53,7 +53,7 @@ public class DemoProducer {
 
             @Override
             public void onFailure(Throwable ex) {
-                LOG.error("Unable to send value=[{}] due to: {}", value, ex);
+                LOG.error("Unable to send value={} due to: {}", value, ex);
             }
         });
     }
