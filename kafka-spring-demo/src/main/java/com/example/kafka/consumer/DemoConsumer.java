@@ -13,7 +13,7 @@ public class DemoConsumer {
 
     @KafkaListener(topics = "${demo.topic-name}")
     public void listen(ConsumerRecord<?, ?> record) throws Exception {
-        LOG.info(String.format("Received offset = %d key = %s value = %s", record.offset(), record.key(), record.value()));
+        LOG.info(String.format("Recv - offset = %d key = %s value = %s", record.offset(), record.key(), record.value()));
     }
 
 }

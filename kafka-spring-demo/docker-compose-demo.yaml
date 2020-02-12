@@ -18,10 +18,8 @@ services:
       - 9581-9585:9581-9585       # JMX Ports
       - 9092:9092                 # Kafka Broker
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  demo:
+    image: localhost.localdomain:5000/kafka-spring-demo:1.0-SNAPSHOT
     ports:
       - 8081:8081
     environment:

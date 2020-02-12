@@ -48,7 +48,7 @@ public class DemoProducer {
         future.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                LOG.info("Sent     offset = {} key = {} value = {}", result.getRecordMetadata().offset(), result.getProducerRecord().key(), value);
+                LOG.info("Sent - offset = {} key = {} value = {}", result.getRecordMetadata().offset(), result.getProducerRecord().key(), value);
             }
 
             @Override
