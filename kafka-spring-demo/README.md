@@ -4,9 +4,14 @@
 
     docker run -d -p 5000:5000 --restart=always --name registry registry:2
 
-## Iniciar Kafka
+## Build do demo
 
-    docker-compose up -d
+    mvn clean install
+
+## Deploy e execução do demo
+
+    mvn dockerfile:build dockerfile:push
+    docker-compose -f docker-compose-demo.yaml up 
 
 ## Abrir shell no container Kakfa
 
