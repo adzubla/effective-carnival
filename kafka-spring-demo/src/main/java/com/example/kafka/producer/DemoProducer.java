@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -23,10 +26,11 @@ public class DemoProducer {
 
     @Autowired
     private DemoProperties demoProperties;
+    private long n = 0;
 
     @Scheduled(fixedDelayString = "${demo.delay}")
     public void produce() {
-        sendMessageWithCallback("Demo... " + Instant.now());
+        sendMessageWithHeader("Demo... " + Instant.now());
     }
 
     public void sendMessageAsynch(String value) {
@@ -56,6 +60,16 @@ public class DemoProducer {
                 LOG.error("Unable to send value={} due to: {}", value, ex);
             }
         });
+    }
+
+    public void sendMessageWithHeader(String value) {
+        String header = String.valueOf(n++);
+
+        Message<String> message = MessageBuilder.withPayload(value)
+                .setHeader(KafkaHeaders.TOPIC, demoProperties.getTopicName())
+                .setHeader("X-Custom-Header", header)
+                .build();
+        kafkaTemplate.send(message);
     }
 
 }

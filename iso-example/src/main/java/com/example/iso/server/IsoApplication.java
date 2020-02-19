@@ -1,4 +1,4 @@
-package com.example.iso;
+package com.example.iso.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
