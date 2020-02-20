@@ -60,8 +60,8 @@ public class TestClient {
         }
     }
 
-    private void sendMessage() throws InterruptedException {
-        IsoMessage message = buildMessage(factory);
+    private void sendMessage(int numeric, String text) throws InterruptedException {
+        IsoMessage message = buildMessage(factory, numeric, text);
         Util.print("-- REQUEST --------------------------------", message);
         client.send(message);
     }
@@ -70,17 +70,16 @@ public class TestClient {
         client.shutdown();
     }
 
-    private IsoMessage buildMessage(MessageFactory<IsoMessage> messageFactory) {
+    private IsoMessage buildMessage(MessageFactory<IsoMessage> messageFactory, int numeric, String text) {
         IsoMessage m = messageFactory.newMessage(0x200);
         m.setValue(4, new BigDecimal("501.25"), IsoType.AMOUNT, 0);
         m.setValue(12, new Date(), IsoType.TIME, 0);
         m.setValue(15, new Date(), IsoType.DATE4, 0);
         m.setValue(17, new Date(), IsoType.DATE_EXP, 0);
-        m.setValue(37, 12345678, IsoType.NUMERIC, 12);
-        m.setValue(41, "TEST-TERMINAL", IsoType.ALPHA, 16);
+        m.setValue(37, numeric, IsoType.NUMERIC, 12);
+        m.setValue(41, text, IsoType.ALPHA, 16);
         return m;
     }
-
 
     public static void main(String[] args) throws IOException, InterruptedException {
         TestClient testClient = new TestClient();
@@ -105,7 +104,8 @@ public class TestClient {
 
         testClient.connect();
 
-        testClient.sendMessage();
+        testClient.sendMessage(1234, "MSG 1");
+        testClient.sendMessage(5678, "MSG 2");
 
         Thread.sleep(1000);
 

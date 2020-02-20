@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyIsoMessageListener implements IsoMessageListener<IsoMessage> {
-    private static Logger LOG = LoggerFactory.getLogger(MyIsoMessageListener.class);
+public class IsoListener implements IsoMessageListener<IsoMessage> {
+    private static Logger LOG = LoggerFactory.getLogger(IsoListener.class);
 
     @Autowired
     private MessageFactory<IsoMessage> messageFactory;
@@ -30,9 +30,12 @@ public class MyIsoMessageListener implements IsoMessageListener<IsoMessage> {
 
         Util.print("-- REQUEST --------------------------------", isoMessage);
 
+        String respText = "RESP:" + isoMessage.getField(41).getValue();
+
         final IsoMessage response = messageFactory.createResponse(isoMessage);
         response.setField(39, IsoType.ALPHA.value("00", 2));
         response.setField(60, IsoType.LLLVAR.value("XXX", 3));
+        response.setField(126, IsoType.LLLVAR.value(respText, 16));
 
         Util.print("-- RESPONSE -------------------------------", response);
 

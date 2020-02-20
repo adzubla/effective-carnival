@@ -22,7 +22,7 @@ public class IsoServer {
     private Iso8583Server<IsoMessage> server;
 
     @Autowired
-    private MyIsoMessageListener listener;
+    private IsoListener listener;
 
     @Autowired
     private MessageFactory<IsoMessage> messageFactory;
