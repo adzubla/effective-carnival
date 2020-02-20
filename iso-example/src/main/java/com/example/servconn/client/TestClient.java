@@ -1,6 +1,6 @@
-package com.example.iso.client;
+package com.example.servconn.client;
 
-import com.example.iso.Util;
+import com.example.servconn.Util;
 import com.github.kpavlov.jreactive8583.IsoMessageListener;
 import com.github.kpavlov.jreactive8583.client.Iso8583Client;
 import com.solab.iso8583.IsoMessage;
@@ -82,6 +82,9 @@ public class TestClient {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        Integer id = Integer.valueOf(args[0]);
+        String value = args[1];
+
         TestClient testClient = new TestClient();
         testClient.setHostname("localhost");
         testClient.setPort(7777);
@@ -104,8 +107,7 @@ public class TestClient {
 
         testClient.connect();
 
-        testClient.sendMessage(1234, "MSG 1");
-        testClient.sendMessage(5678, "MSG 2");
+        testClient.sendMessage(id, value);
 
         Thread.sleep(1000);
 

@@ -1,4 +1,4 @@
-package com.example.iso.server;
+package com.example.servconn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
@@ -14,9 +15,10 @@ import java.util.Arrays;
 
 @SpringBootApplication
 @EnableScheduling
-public class IsoApplication {
+@EnableJms
+public class ServconnApplication {
 
-    private static Logger LOG = LoggerFactory.getLogger(IsoApplication.class);
+    private static Logger LOG = LoggerFactory.getLogger(ServconnApplication.class);
 
     @Autowired
     BuildProperties buildProperties;
@@ -25,7 +27,7 @@ public class IsoApplication {
     private Environment environment;
 
     public static void main(String[] args) {
-        SpringApplication.run(IsoApplication.class, args);
+        SpringApplication.run(ServconnApplication.class, args);
     }
 
     @PostConstruct

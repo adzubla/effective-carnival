@@ -1,19 +1,15 @@
-package com.example.iso.server;
+package com.example.servconn.iso;
 
 import com.github.kpavlov.jreactive8583.server.Iso8583Server;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.MessageFactory;
-import com.solab.iso8583.parse.ConfigParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @Service
 public class IsoServer {
@@ -26,15 +22,6 @@ public class IsoServer {
 
     @Autowired
     private MessageFactory<IsoMessage> messageFactory;
-
-    @Bean
-    public MessageFactory<IsoMessage> messageFactory() throws IOException {
-        MessageFactory<IsoMessage> messageFactory = ConfigParser.createFromClasspathConfig("j8583-config.xml");
-        messageFactory.setCharacterEncoding(StandardCharsets.US_ASCII.name());
-        messageFactory.setUseBinaryMessages(false);
-        messageFactory.setAssignDate(true);
-        return messageFactory;
-    }
 
     @PostConstruct
     public void init() throws InterruptedException {
