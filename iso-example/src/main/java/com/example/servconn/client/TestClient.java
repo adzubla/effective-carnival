@@ -18,6 +18,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Scanner;
 
 public class TestClient {
     private static Logger LOG = LoggerFactory.getLogger(TestClient.class);
@@ -52,7 +53,7 @@ public class TestClient {
         SocketAddress socketAddress = new InetSocketAddress(hostname, port);
         client = new Iso8583Client<>(socketAddress, factory);
         client.addMessageListener(listener);
-        client.getConfiguration().replyOnError();
+        //client.getConfiguration().replyOnError();
         client.init();
         client.connect();
         if (!client.isConnected()) {
@@ -82,8 +83,6 @@ public class TestClient {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Integer id = Integer.valueOf(args[0]);
-        String value = args[1];
 
         TestClient testClient = new TestClient();
         testClient.setHostname("localhost");
@@ -107,11 +106,26 @@ public class TestClient {
 
         testClient.connect();
 
-        testClient.sendMessage(id, value);
+        Thread.sleep(500);
 
-        Thread.sleep(1000);
+        readInput(testClient);
 
         testClient.close();
+    }
+
+    private static void readInput(TestClient testClient) throws InterruptedException {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("> ");
+            int id = scanner.nextInt();
+            if (id == 0) {
+                return;
+            }
+            String value = scanner.next();
+            testClient.sendMessage(id, value);
+            Thread.sleep(500);
+        }
     }
 
 }

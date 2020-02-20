@@ -55,7 +55,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
         jmsTemplate.send("QTEST", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                String s = id + "," + text;
+                String s = id + " " + text;
                 LOG.debug("Sending to queue: {}", s);
                 return session.createTextMessage(s);
             }

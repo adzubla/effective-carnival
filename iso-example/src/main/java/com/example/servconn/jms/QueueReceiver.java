@@ -41,7 +41,7 @@ public class QueueReceiver {
     }
 
     private Integer getId(String message) {
-        Scanner scanner = new Scanner(message).useDelimiter(",");
+        Scanner scanner = new Scanner(message);
         return scanner.nextInt();
     }
 

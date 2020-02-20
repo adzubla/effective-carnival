@@ -7,16 +7,18 @@
 	<header type="0200">ISO015000050</header>
 	<header type="0210">ISO015000055</header>
 	-->
+	<header type="0800"></header>
+	<header type="0810"></header>
 
 	<!-- The client example uses this to create requests -->
 	<template type="0200">
 		<field num="3" type="NUMERIC" length="6">650000</field>
 		<field num="32" type="LLVAR">456</field>
 		<field num="35" type="LLVAR">4591700012340000=</field>
-		<field num="43" type="ALPHA" length="40">SOLABTEST             TEST-3       DF MX</field>
+		<field num="43" type="ALPHA" length="40">SOLABTEST TEST-3 DF MX</field>
 		<field num="49" type="ALPHA" length="3">484</field>
 		<field num="60" type="LLLVAR">B456PRO1+000</field>
-		<field num="61" type="LLLVAR">        1234P</field>
+		<field num="61" type="LLLVAR">1234P</field>
 		<field num="100" type="LLVAR">999</field>
 		<field num="102" type="LLVAR">ABCD</field>
 	</template>
@@ -73,14 +75,27 @@
 		<field num="41" type="ALPHA" length="16" />
 		<field num="43" type="ALPHA" length="40" />
 		<field num="48" type="LLLVAR" />
-		<field num="49" type="ALPHA" length="3" />
-		<field num="60" type="LLLVAR" />
-		<field num="61" type="LLLVAR" />
-		<field num="70" type="ALPHA" length="3" />
-		<field num="90" type="ALPHA" length="42" />
-		<field num="100" type="LLVAR" />
-		<field num="102" type="LLVAR" />
-		<field num="126" type="LLLVAR" />
+		<field num="49" type="ALPHA" length="3"/>
+		<field num="60" type="LLLVAR"/>
+		<field num="61" type="LLLVAR"/>
+		<field num="70" type="ALPHA" length="3"/>
+		<field num="90" type="ALPHA" length="42"/>
+		<field num="100" type="LLVAR"/>
+		<field num="102" type="LLVAR"/>
+		<field num="126" type="LLLVAR"/>
+	</parse>
+
+	<parse type="0800">
+		<field num="3" type="ALPHA" length="6"/>
+		<field num="12" type="DATE4" length="14"/>
+		<field num="17" type="DATE4" length="8"/>
+		<field num="11" type="NUMERIC" length="6"/>
+		<field num="41" type="LLVAR" length="16"/>
+	</parse>
+
+	<parse type="0810" extends="0800">
+		<field num="17" type="exclude"/>
+		<field num="39" type="ALPHA" length="2"/>
 	</parse>
 
 </j8583-config>
