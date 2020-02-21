@@ -303,6 +303,11 @@
                 <configuration>
                     <mainClass>com.example.servconn.client.TestClient</mainClass>
                 </configuration>
+<!--
+                <configuration>
+                    <mainClass>com.example.servconn.ServconnApplication</mainClass>
+                </configuration>
+-->
             </plugin>
 
         </plugins>

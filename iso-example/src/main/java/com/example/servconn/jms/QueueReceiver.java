@@ -23,7 +23,7 @@ public class QueueReceiver {
     @Autowired
     private RequestManager requestManager;
 
-    @JmsListener(destination = "QTEST", concurrency = "2")
+    @JmsListener(destination = "QTEST", concurrency = "8")
     public void receiveMessage(String message) {
         LOG.debug("Received from queue: {}", message);
 

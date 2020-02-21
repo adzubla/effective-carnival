@@ -84,6 +84,45 @@ public class TestClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
+        prompt();
+
+        //multiClients();
+    }
+
+    private static final int N = 64;
+
+    private static void multiClients() throws IOException, InterruptedException {
+        TestClient[] clients = new TestClient[N];
+
+        for (int i = 0; i < N; i++) {
+            System.out.println(">>>>>>>>>>>>>>>>>>>> i = " + i);
+            clients[i] = getTestClient();
+            clients[i].connect();
+        }
+        System.out.println("All connected!");
+
+        Thread.sleep(1000 * 30);
+
+        while (true) {
+            for (int i = 0; i < N; i++) {
+                clients[i].sendMessage(i, "msg" + i);
+            }
+        }
+    }
+
+    private static void prompt() throws InterruptedException, IOException {
+        TestClient testClient = getTestClient();
+
+        testClient.connect();
+
+        Thread.sleep(500);
+
+        readInput(testClient);
+
+        testClient.close();
+    }
+
+    private static TestClient getTestClient() throws IOException {
         TestClient testClient = new TestClient();
         testClient.setHostname("localhost");
         testClient.setPort(7777);
@@ -93,7 +132,7 @@ public class TestClient {
             @Override
             public boolean applies(IsoMessage isoMessage) {
                 LOG.debug("applies: {}", isoMessage);
-                return isoMessage.getType() == 0x210;
+                return true;
             }
 
             @Override
@@ -103,14 +142,7 @@ public class TestClient {
                 return false;
             }
         });
-
-        testClient.connect();
-
-        Thread.sleep(500);
-
-        readInput(testClient);
-
-        testClient.close();
+        return testClient;
     }
 
     private static void readInput(TestClient testClient) throws InterruptedException {
