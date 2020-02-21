@@ -1,6 +1,7 @@
 package com.example.scterm.iso;
 
 import com.github.kpavlov.jreactive8583.server.Iso8583Server;
+import com.github.kpavlov.jreactive8583.server.ServerConfiguration;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.MessageFactory;
 import org.slf4j.Logger;
@@ -25,7 +26,12 @@ public class IsoServer {
 
     @PostConstruct
     public void init() throws InterruptedException {
-        server = new Iso8583Server<>(7777, messageFactory);
+
+        ServerConfiguration config = ServerConfiguration.newBuilder()
+                .idleTimeout(Integer.MAX_VALUE)
+                .build();
+
+        server = new Iso8583Server<>(7777, config, messageFactory);
 
         server.addMessageListener(listener);
         //server.getConfiguration().replyOnError();

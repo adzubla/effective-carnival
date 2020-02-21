@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE j8583-config PUBLIC "-//J8583//DTD CONFIG 1.0//EN" "http://j8583.sourceforge.net/j8583.dtd">
+<!DOCTYPE j8583-config PUBLIC "-//J8583//DTD CONFIG 1.0//EN"
+		"http://j8583.sourceforge.net/j8583.dtd">
 <j8583-config>
-
-	<!-- These are the ISO headers to be prepended to the message types specified -->
-	<!--
-	<header type="0200">ISO015000050</header>
-	<header type="0210">ISO015000055</header>
-	<header type="0400">ISO015000050</header>
-	<header type="0410">ISO015000055</header>
-	<header type="0800">ISO015000015</header>
-	<header type="0810">ISO015000015</header>
-	-->
 
 	<!-- The client example uses this to create requests -->
 	<template type="0200">
@@ -26,7 +17,7 @@
 	</template>
 
 	<!-- The server example uses this to create the responses
-		we only need a few fields because the rest are copied from the request -->
+        we only need a few fields because the rest are copied from the request -->
 	<template type="0210">
 		<field num="60" type="LLLVAR">Fixed data from template</field>
 		<field num="70" type="ALPHA" length="3">ABC</field>
@@ -35,6 +26,18 @@
 		<field num="102" type="LLVAR">Another fixed field</field>
 		<field num="126" type="LLLVAR">...and yet another fixed field.</field>
 	</template>
+
+	<!-- echo request -->
+	<template type="0800">
+		<field num="70" type="NUMERIC" length="3">301</field>
+	</template>
+
+	<!-- echo response -->
+	<template type="0810">
+		<field num="39" type="ALPHA" length="2">-1</field>
+		<field num="70" type="NUMERIC" length="3">301</field>
+	</template>
+
 
 	<!-- The server example uses this to read the requests -->
 	<parse type="0200">
@@ -87,17 +90,19 @@
 		<field num="126" type="LLLVAR"/>
 	</parse>
 
+	<!-- echo request -->
 	<parse type="0800">
-		<field num="3" type="ALPHA" length="6"/>
-		<field num="12" type="DATE4" length="14"/>
-		<field num="17" type="DATE4" length="8"/>
+		<field num="7" type="DATE10"/>
 		<field num="11" type="NUMERIC" length="6"/>
-		<field num="41" type="LLVAR" length="16"/>
+		<field num="70" type="NUMERIC" length="3"/>
 	</parse>
 
-	<parse type="0810" extends="0800">
-		<field num="17" type="exclude"/>
+	<!-- echo response -->
+	<parse type="0810">
+		<field num="7" type="DATE10"/>
+		<field num="11" type="NUMERIC" length="6"/>
 		<field num="39" type="ALPHA" length="2"/>
+		<field num="70" type="NUMERIC" length="3"/>
 	</parse>
 
 </j8583-config>

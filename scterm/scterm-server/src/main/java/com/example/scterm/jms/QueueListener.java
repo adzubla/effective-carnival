@@ -27,7 +27,7 @@ public class QueueListener {
     public void receiveMessage(String message) {
         LOG.debug("Received from queue: {}", message);
 
-        Integer id = getId(message);
+        Long id = getId(message);
 
         RequestManager.Data data = requestManager.get(id);
 
@@ -40,9 +40,9 @@ public class QueueListener {
         }
     }
 
-    private Integer getId(String message) {
+    private Long getId(String message) {
         Scanner scanner = new Scanner(message);
-        return scanner.nextInt();
+        return scanner.nextLong();
     }
 
     public void sendResponse(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage, String message) {

@@ -47,7 +47,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
     }
 
     private void dispatch(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
-        Integer id = Integer.valueOf((String) isoMessage.getField(37).getValue());
+        Long id = Long.valueOf((String) isoMessage.getField(37).getValue());
         String text = (String) isoMessage.getField(41).getValue();
 
         requestManager.add(id, channelHandlerContext, isoMessage);

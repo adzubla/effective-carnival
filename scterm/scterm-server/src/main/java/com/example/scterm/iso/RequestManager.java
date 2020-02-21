@@ -9,17 +9,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class RequestManager {
 
-    private ConcurrentHashMap<Integer, Data> map = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, Data> map = new ConcurrentHashMap<>();
 
-    public void add(Integer id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
+    public void add(Long id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
         map.put(id, new Data(channelHandlerContext, isoMessage));
     }
 
-    public Data get(Integer id) {
+    public Data get(Long id) {
         return map.get(id);
     }
 
-    public void remove(Integer id) {
+    public void remove(Long id) {
         map.remove(id);
     }
 
