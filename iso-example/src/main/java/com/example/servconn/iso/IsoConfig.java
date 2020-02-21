@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
-public class Config {
+public class IsoConfig {
 
     @Bean
     public MessageFactory<IsoMessage> messageFactory() throws IOException {

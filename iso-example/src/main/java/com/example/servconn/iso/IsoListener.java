@@ -52,7 +52,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
 
         requestManager.add(id, channelHandlerContext, isoMessage);
 
-        jmsTemplate.send("QTEST", new MessageCreator() {
+        jmsTemplate.send("Q.TEST", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 String s = id + " " + text;

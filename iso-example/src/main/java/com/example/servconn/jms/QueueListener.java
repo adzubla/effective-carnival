@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.Scanner;
 
 @Service
-public class QueueReceiver {
-    private static Logger LOG = LoggerFactory.getLogger(QueueReceiver.class);
+public class QueueListener {
+    private static Logger LOG = LoggerFactory.getLogger(QueueListener.class);
 
     @Autowired
     private MessageFactory<IsoMessage> messageFactory;
@@ -23,7 +23,7 @@ public class QueueReceiver {
     @Autowired
     private RequestManager requestManager;
 
-    @JmsListener(destination = "QTEST", concurrency = "8")
+    @JmsListener(destination = "Q.TEST", concurrency = "8")
     public void receiveMessage(String message) {
         LOG.debug("Received from queue: {}", message);
 
