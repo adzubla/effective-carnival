@@ -1,4 +1,4 @@
-package com.example.servconn;
+package com.example.scterm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,9 @@ import java.util.Arrays;
 @SpringBootApplication
 @EnableScheduling
 @EnableJms
-public class ServconnApplication {
+public class ScTermApplication {
 
-    private static Logger LOG = LoggerFactory.getLogger(ServconnApplication.class);
+    private static Logger LOG = LoggerFactory.getLogger(ScTermApplication.class);
 
     @Autowired
     BuildProperties buildProperties;
@@ -27,7 +27,7 @@ public class ServconnApplication {
     private Environment environment;
 
     public static void main(String[] args) {
-        SpringApplication.run(ServconnApplication.class, args);
+        SpringApplication.run(ScTermApplication.class, args);
     }
 
     @PostConstruct

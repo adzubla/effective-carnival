@@ -1,4 +1,4 @@
-package com.example.servconn.iso;
+package com.example.scterm.iso;
 
 import com.github.kpavlov.jreactive8583.IsoMessageListener;
 import com.solab.iso8583.IsoMessage;
@@ -26,13 +26,13 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
 
     @Override
     public boolean applies(IsoMessage isoMessage) {
-        LOG.debug("applies: {}", isoMessage);
+        LOG.trace("applies: {}", isoMessage);
         return isoMessage.getType() == 0x200;
     }
 
     @Override
     public boolean onMessage(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
-        LOG.debug("onMessage: {} {}", channelHandlerContext, isoMessage);
+        LOG.trace("onMessage: {} {}", channelHandlerContext, isoMessage);
         LOG.debug("Received from client: {}", isoMessage.getField(41).getValue());
 
         boolean ok = isMessageValid(isoMessage);
@@ -52,7 +52,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
 
         requestManager.add(id, channelHandlerContext, isoMessage);
 
-        jmsTemplate.send("Q.TEST", new MessageCreator() {
+        jmsTemplate.send("DEV.QUEUE.1", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 String s = id + " " + text;

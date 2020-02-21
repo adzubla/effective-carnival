@@ -1,4 +1,4 @@
-package com.example.servconn.iso;
+package com.example.scterm.iso;
 
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.MessageFactory;

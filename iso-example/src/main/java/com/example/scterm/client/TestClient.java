@@ -1,6 +1,5 @@
-package com.example.servconn.client;
+package com.example.scterm.client;
 
-import com.example.servconn.Util;
 import com.github.kpavlov.jreactive8583.IsoMessageListener;
 import com.github.kpavlov.jreactive8583.client.Iso8583Client;
 import com.solab.iso8583.IsoMessage;
@@ -63,7 +62,7 @@ public class TestClient {
 
     private void sendMessage(int numeric, String text) throws InterruptedException {
         IsoMessage message = buildMessage(factory, numeric, text);
-        Util.print("-- REQUEST --------------------------------", message);
+        //LOG.debug("-- REQUEST --------------------------------{}", Util.describe(message));
         client.send(message);
     }
 
@@ -84,9 +83,11 @@ public class TestClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        prompt();
-
-        //multiClients();
+        if (args.length > 0) {
+            prompt();
+        } else {
+            multiClients();
+        }
     }
 
     private static final int N = 64;
@@ -101,7 +102,7 @@ public class TestClient {
         }
         System.out.println("All connected!");
 
-        Thread.sleep(1000 * 30);
+        Thread.sleep(1000 * 10);
 
         while (true) {
             for (int i = 0; i < N; i++) {
@@ -138,7 +139,8 @@ public class TestClient {
             @Override
             public boolean onMessage(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
                 LOG.debug("onMessage: {} {}", channelHandlerContext, isoMessage);
-                Util.print("-- RESPONSE -------------------------------", isoMessage);
+                //LOG.debug("-- RESPONSE -------------------------------{}", Util.describe(isoMessage));
+                LOG.info("{} -> {}", isoMessage.getField(41).getValue(), isoMessage.getField(126).getValue());
                 return false;
             }
         });

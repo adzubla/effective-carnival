@@ -1,6 +1,6 @@
-package com.example.servconn.jms;
+package com.example.scterm.jms;
 
-import com.example.servconn.iso.RequestManager;
+import com.example.scterm.iso.RequestManager;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.IsoType;
 import com.solab.iso8583.MessageFactory;
@@ -23,7 +23,7 @@ public class QueueListener {
     @Autowired
     private RequestManager requestManager;
 
-    @JmsListener(destination = "Q.TEST", concurrency = "8")
+    @JmsListener(destination = "DEV.QUEUE.1", concurrency = "1")
     public void receiveMessage(String message) {
         LOG.debug("Received from queue: {}", message);
 

@@ -1,4 +1,4 @@
-package com.example.servconn.iso;
+package com.example.scterm.iso;
 
 import com.github.kpavlov.jreactive8583.server.Iso8583Server;
 import com.solab.iso8583.IsoMessage;

@@ -1,2 +1,2 @@
 
-mvn exec:java -Dexec.mainClass="com.example.servconn.client.TestClient"
+mvn exec:java -Dexec.mainClass="com.example.scterm.client.TestClient"
