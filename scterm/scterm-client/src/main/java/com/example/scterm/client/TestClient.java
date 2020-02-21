@@ -60,10 +60,26 @@ public class TestClient {
         }
     }
 
-    private void sendMessage(int numeric, String text) throws InterruptedException {
-        IsoMessage message = buildMessage(factory, numeric, text);
-        //LOG.debug("-- REQUEST --------------------------------{}", Util.describe(message));
-        client.send(message);
+    private static void multiClients() throws IOException, InterruptedException {
+        TestClient[] clients = new TestClient[N];
+
+        for (int i = 0; i < N; i++) {
+            System.out.println("Connection #" + i);
+            clients[i] = getTestClient();
+            clients[i].connect();
+        }
+        System.out.println("All connected!");
+
+        Thread.sleep(1000 * 2);
+
+        System.out.println("Sending!");
+
+        while (true) {
+            for (int i = 0; i < N; i++) {
+                clients[i].sendMessage(i, "msg" + i);
+                Thread.sleep(500);
+            }
+        }
     }
 
     private void close() {
@@ -92,22 +108,18 @@ public class TestClient {
 
     private static final int N = 64;
 
-    private static void multiClients() throws IOException, InterruptedException {
-        TestClient[] clients = new TestClient[N];
-
-        for (int i = 0; i < N; i++) {
-            System.out.println(">>>>>>>>>>>>>>>>>>>> i = " + i);
-            clients[i] = getTestClient();
-            clients[i].connect();
-        }
-        System.out.println("All connected!");
-
-        Thread.sleep(1000 * 10);
+    private static void readInput(TestClient testClient) throws InterruptedException {
+        Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            for (int i = 0; i < N; i++) {
-                clients[i].sendMessage(i, "msg" + i);
+            System.out.print("> ");
+            int id = scanner.nextInt();
+            if (id == 0) {
+                return;
             }
+            String value = scanner.next();
+            testClient.sendMessage(id, value);
+            Thread.sleep(200);
         }
     }
 
@@ -147,19 +159,11 @@ public class TestClient {
         return testClient;
     }
 
-    private static void readInput(TestClient testClient) throws InterruptedException {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.print("> ");
-            int id = scanner.nextInt();
-            if (id == 0) {
-                return;
-            }
-            String value = scanner.next();
-            testClient.sendMessage(id, value);
-            Thread.sleep(500);
-        }
+    private void sendMessage(int numeric, String text) throws InterruptedException {
+        IsoMessage message = buildMessage(factory, numeric, text);
+        //LOG.debug("-- REQUEST --------------------------------{}", Util.describe(message));
+        LOG.debug("Sending {} {}", numeric, text);
+        client.send(message);
     }
 
 }

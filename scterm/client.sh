@@ -1,2 +1,10 @@
+#!/usr/bin/env bash
 
-mvn exec:java -Dexec.mainClass="com.example.scterm.client.TestClient"
+cd scterm-client || exit 1
+
+if [ $# != 0 ];
+then
+  ARGS="-Dexec.args=$1"
+fi
+
+mvn exec:java $ARGS

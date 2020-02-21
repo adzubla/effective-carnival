@@ -32,7 +32,7 @@ public class QueueListener {
         RequestManager.Data data = requestManager.get(id);
 
         if (data == null) {
-            LOG.debug("Discarding {}", message);
+            LOG.debug("Discarding: {}", message);
         } else {
             sendResponse(data.getChannelHandlerContext(), data.getIsoMessage(), message.toUpperCase());
 

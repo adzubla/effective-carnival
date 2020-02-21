@@ -39,6 +39,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.kpavlov.jreactive8583</groupId>
             <artifactId>netty-iso8583</artifactId>
             <version>0.2.4</version>
@@ -290,16 +296,9 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
                     <mainClass>com.example.scterm.client.TestClient</mainClass>
                 </configuration>
-
-                <!--
-                                <configuration>
-                                    <mainClass>com.example.sctermervconnApplication</mainClass>
-                                </configuration>
-                -->
             </plugin>
 
         </plugins>

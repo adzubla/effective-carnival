@@ -290,16 +290,9 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
-                    <mainClass>com.example.scterm.client.TestClient</mainClass>
+                    <mainClass>com.example.scterm.ScTermApplication</mainClass>
                 </configuration>
-
-                <!--
-                                <configuration>
-                                    <mainClass>com.example.sctermervconnApplication</mainClass>
-                                </configuration>
-                -->
             </plugin>
 
         </plugins>
