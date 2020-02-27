@@ -24,6 +24,8 @@ spec:
           ports:
             - containerPort: 9443
               name: https
+            - containerPort: 1414
+              name: mq
           env:
             - name: LICENSE
               value: accept
