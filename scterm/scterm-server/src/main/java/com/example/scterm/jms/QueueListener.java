@@ -35,7 +35,7 @@ public class QueueListener {
         if (connectionInfo == null) {
             LOG.debug("Discarding: {}", message);
         } else {
-            String text = message.toUpperCase();
+            String text = scanner.next().toUpperCase();
             final IsoMessage response = buildResponse(connectionInfo.getIsoMessage(), text);
 
             LOG.debug("Responding to client: {}", text);
@@ -47,7 +47,7 @@ public class QueueListener {
         final IsoMessage response = messageFactory.createResponse(isoMessage);
         response.setField(39, IsoType.ALPHA.value("00", 2));
         response.setField(60, IsoType.LLLVAR.value("XXX", 3));
-        response.setField(126, IsoType.LLLVAR.value(text, 16));
+        response.setField(126, IsoType.LLLVAR.value(text));
         return response;
     }
 
