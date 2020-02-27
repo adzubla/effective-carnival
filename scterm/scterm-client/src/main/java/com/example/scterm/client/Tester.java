@@ -10,8 +10,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Tester {
-    private static final int NUM_CONNECTIONS = 64;
     private static Logger LOG = LoggerFactory.getLogger(Tester.class);
+
+    private static final int NUM_CONNECTIONS = 50;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         if (args.length > 0) {
@@ -32,12 +33,12 @@ public class Tester {
         }
         LOG.info("All connected!");
 
+        long pid = ProcessHandle.current().pid();
+        LOG.info("PID={}", pid);
+
         Thread.sleep(1000 * 2);
 
         LOG.info("Sending!");
-
-        long pid = ProcessHandle.current().pid();
-
         while (true) {
             for (int i = 0; i < NUM_CONNECTIONS; i++) {
                 isoClients[i].sendMessage(pid, "msg" + i);
