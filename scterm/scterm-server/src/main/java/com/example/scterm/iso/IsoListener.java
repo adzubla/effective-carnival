@@ -49,7 +49,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
 
     private void dispatch(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
         Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
-        Long id = scanner.nextLong();
+        ConnectionId id = new ConnectionId(scanner.nextLong());
         String text = (String) isoMessage.getField(43).getValue();
 
         connectionManager.add(id, channelHandlerContext, isoMessage);
@@ -57,7 +57,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
         jmsTemplate.send("DEV.QUEUE.1", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                String s = id + " " + text;
+                String s = id.getId() + " " + text;
                 LOG.debug("Sending to queue: {}", s);
                 return session.createTextMessage(s);
             }

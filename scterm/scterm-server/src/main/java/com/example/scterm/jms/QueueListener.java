@@ -1,5 +1,6 @@
 package com.example.scterm.jms;
 
+import com.example.scterm.iso.ConnectionId;
 import com.example.scterm.iso.ConnectionManager;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.IsoType;
@@ -27,7 +28,7 @@ public class QueueListener {
     public void receiveMessage(String message) {
         LOG.debug("Received from queue: {}", message);
 
-        Long id = getId(message);
+        ConnectionId id = getId(message);
 
         ConnectionManager.ConnectionInfo connectionInfo = connectionManager.get(id);
 
@@ -38,9 +39,9 @@ public class QueueListener {
         }
     }
 
-    private Long getId(String message) {
+    private ConnectionId getId(String message) {
         Scanner scanner = new Scanner(message);
-        return scanner.nextLong();
+        return new ConnectionId(scanner.nextLong());
     }
 
     public void sendResponse(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage, String message) {

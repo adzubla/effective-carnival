@@ -9,20 +9,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ConnectionManager {
 
-    private ConcurrentHashMap<Long, ConnectionInfo> map = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<ConnectionId, ConnectionInfo> map = new ConcurrentHashMap<>();
 
-    public void add(Long id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
+    public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
         if (map.containsKey(id)) {
             return;
         }
         map.put(id, new ConnectionInfo(channelHandlerContext, isoMessage));
     }
 
-    public ConnectionInfo get(Long id) {
+    public ConnectionInfo get(ConnectionId id) {
         return map.get(id);
     }
 
-    public void remove(Long id) {
+    public void remove(ConnectionId id) {
         map.remove(id);
     }
 
