@@ -43,7 +43,7 @@ public class Tester {
         LOG.info("Sending!");
         while (true) {
             for (int i = 0; i < NUM_CONNECTIONS; i++) {
-                isoClients[i].sendMessage(pid, "msg" + i);
+                isoClients[i].sendMessage(pid + "-" + i, "msg" + i);
                 Thread.sleep(delay);
             }
         }
@@ -70,7 +70,7 @@ public class Tester {
             if ("q".equals(value)) {
                 break;
             }
-            isoClient.sendMessage(pid, value);
+            isoClient.sendMessage(pid + "-0", value);
             Thread.sleep(100);
         }
     }
@@ -91,7 +91,8 @@ public class Tester {
             @Override
             public boolean onMessage(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
                 LOG.debug("onMessage: {} {}", channelHandlerContext, isoMessage);
-                LOG.info("{} -> {}", isoMessage.getField(41).getValue(), isoMessage.getField(126).getValue());
+                LOG.info("id: {} request: {} response: {}", isoMessage.getField(41).getValue(),
+                        isoMessage.getField(43).getValue(), isoMessage.getField(126).getValue());
                 return false;
             }
         });
