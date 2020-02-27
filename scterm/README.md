@@ -1,4 +1,5 @@
 
+    eval $(minikube docker-env)
 
 ## Inicar o docker registry local
 
@@ -21,9 +22,9 @@
 
 ## Build do demo
 
+    cd scterm-server
     mvn clean install
 
 ## Deploy e execução do demo
 
-    mvn dockerfile:build dockerfile:push
-    docker-compose -f docker-compose-demo.yaml up 
+    eval $(minikube docker-env)

@@ -1,0 +1,14 @@
+version: '3'
+services:
+
+  ibmmq:
+    image: ibmcom/mq
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+    ports:
+      - 1414:1414
+      - 9443:9443
+
+  scterm:
+    image: localhost.localdomain:5000/scterm-server:1.0-SNAPSHOT
