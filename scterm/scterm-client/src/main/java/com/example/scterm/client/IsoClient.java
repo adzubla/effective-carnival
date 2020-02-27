@@ -68,14 +68,14 @@ public class IsoClient {
         client.send(message);
     }
 
-    private IsoMessage buildMessage(MessageFactory<IsoMessage> messageFactory, long numeric, String text) {
+    private IsoMessage buildMessage(MessageFactory<IsoMessage> messageFactory, long id, String text) {
         IsoMessage m = messageFactory.newMessage(0x200);
         m.setValue(4, new BigDecimal("501.25"), IsoType.AMOUNT, 0);
         m.setValue(12, new Date(), IsoType.TIME, 0);
         m.setValue(15, new Date(), IsoType.DATE4, 0);
         m.setValue(17, new Date(), IsoType.DATE_EXP, 0);
         m.setValue(37, 127, IsoType.NUMERIC, 12);
-        m.setValue(41, String.valueOf(numeric), IsoType.ALPHA, 16);
+        m.setValue(41, "id-" + id, IsoType.ALPHA, 16);
         m.setValue(43, text, IsoType.ALPHA, 40);
         return m;
     }

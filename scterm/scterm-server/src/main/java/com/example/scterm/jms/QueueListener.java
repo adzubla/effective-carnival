@@ -28,7 +28,8 @@ public class QueueListener {
     public void receiveMessage(String message) {
         LOG.debug("Received from queue: {}", message);
 
-        ConnectionId id = getId(message);
+        Scanner scanner = new Scanner(message);
+        ConnectionId id = new ConnectionId(scanner.next());
 
         ConnectionManager.ConnectionInfo connectionInfo = connectionManager.get(id);
 
@@ -39,18 +40,13 @@ public class QueueListener {
         }
     }
 
-    private ConnectionId getId(String message) {
-        Scanner scanner = new Scanner(message);
-        return new ConnectionId(scanner.nextLong());
-    }
-
-    public void sendResponse(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage, String message) {
+    public void sendResponse(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage, String text) {
         final IsoMessage response = messageFactory.createResponse(isoMessage);
         response.setField(39, IsoType.ALPHA.value("00", 2));
         response.setField(60, IsoType.LLLVAR.value("XXX", 3));
-        response.setField(126, IsoType.LLLVAR.value(message, 16));
+        response.setField(126, IsoType.LLLVAR.value(text, 16));
 
-        LOG.debug("Responding to client: {}", message);
+        LOG.debug("Responding to client: {}", text);
         channelHandlerContext.writeAndFlush(response);
     }
 

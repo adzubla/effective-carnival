@@ -49,7 +49,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
 
     private void dispatch(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
         Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
-        ConnectionId id = new ConnectionId(scanner.nextLong());
+        ConnectionId id = new ConnectionId(scanner.next());
         String text = (String) isoMessage.getField(43).getValue();
 
         connectionManager.add(id, channelHandlerContext, isoMessage);

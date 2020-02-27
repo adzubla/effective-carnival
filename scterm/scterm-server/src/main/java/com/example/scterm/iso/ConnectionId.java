@@ -4,17 +4,17 @@ import java.util.Objects;
 
 public class ConnectionId {
 
-    private Long id;
+    private String id;
 
-    public ConnectionId(Long id) {
+    public ConnectionId(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -30,4 +30,10 @@ public class ConnectionId {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
+
 }
