@@ -7,15 +7,18 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class RequestManager {
+public class ConnectionManager {
 
-    private ConcurrentHashMap<Long, Data> map = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, ConnectionInfo> map = new ConcurrentHashMap<>();
 
     public void add(Long id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
-        map.put(id, new Data(channelHandlerContext, isoMessage));
+        if (map.containsKey(id)) {
+            return;
+        }
+        map.put(id, new ConnectionInfo(channelHandlerContext, isoMessage));
     }
 
-    public Data get(Long id) {
+    public ConnectionInfo get(Long id) {
         return map.get(id);
     }
 
@@ -23,11 +26,11 @@ public class RequestManager {
         map.remove(id);
     }
 
-    public static class Data {
+    public static class ConnectionInfo {
         private ChannelHandlerContext channelHandlerContext;
         private IsoMessage isoMessage;
 
-        public Data(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
+        public ConnectionInfo(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
             this.channelHandlerContext = channelHandlerContext;
             this.isoMessage = isoMessage;
         }

@@ -1,6 +1,6 @@
 package com.example.scterm.jms;
 
-import com.example.scterm.iso.RequestManager;
+import com.example.scterm.iso.ConnectionManager;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.IsoType;
 import com.solab.iso8583.MessageFactory;
@@ -21,7 +21,7 @@ public class QueueListener {
     private MessageFactory<IsoMessage> messageFactory;
 
     @Autowired
-    private RequestManager requestManager;
+    private ConnectionManager connectionManager;
 
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "1")
     public void receiveMessage(String message) {
@@ -29,14 +29,12 @@ public class QueueListener {
 
         Long id = getId(message);
 
-        RequestManager.Data data = requestManager.get(id);
+        ConnectionManager.ConnectionInfo connectionInfo = connectionManager.get(id);
 
-        if (data == null) {
+        if (connectionInfo == null) {
             LOG.debug("Discarding: {}", message);
         } else {
-            sendResponse(data.getChannelHandlerContext(), data.getIsoMessage(), message.toUpperCase());
-
-            requestManager.remove(id);
+            sendResponse(connectionInfo.getChannelHandlerContext(), connectionInfo.getIsoMessage(), message.toUpperCase());
         }
     }
 

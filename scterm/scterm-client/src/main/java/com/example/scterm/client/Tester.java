@@ -14,7 +14,12 @@ public class Tester {
 
     private static final int NUM_CONNECTIONS = 50;
 
+    private static long pid;
+
     public static void main(String[] args) throws IOException, InterruptedException {
+        pid = ProcessHandle.current().pid();
+        LOG.info("PID={}", pid);
+
         if (args.length > 0) {
             long delay = Long.parseLong(args[0]);
             multiClients(delay);
@@ -32,9 +37,6 @@ public class Tester {
             isoClients[i].connect();
         }
         LOG.info("All connected!");
-
-        long pid = ProcessHandle.current().pid();
-        LOG.info("PID={}", pid);
 
         Thread.sleep(1000 * 2);
 
@@ -64,12 +66,11 @@ public class Tester {
 
         while (true) {
             System.out.print("> ");
-            int id = scanner.nextInt();
-            if (id == 0) {
-                return;
+            String value = scanner.nextLine();
+            if ("q".equals(value)) {
+                break;
             }
-            String value = scanner.next();
-            isoClient.sendMessage(id, value);
+            isoClient.sendMessage(pid, value);
             Thread.sleep(100);
         }
     }

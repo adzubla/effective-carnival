@@ -19,7 +19,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
     private static Logger LOG = LoggerFactory.getLogger(IsoListener.class);
 
     @Autowired
-    private RequestManager requestManager;
+    private ConnectionManager connectionManager;
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -50,7 +50,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
         Long id = Long.valueOf((String) isoMessage.getField(37).getValue());
         String text = (String) isoMessage.getField(41).getValue();
 
-        requestManager.add(id, channelHandlerContext, isoMessage);
+        connectionManager.add(id, channelHandlerContext, isoMessage);
 
         jmsTemplate.send("DEV.QUEUE.1", new MessageCreator() {
             @Override
