@@ -5,7 +5,6 @@ import com.example.scterm.iso.ConnectionManager;
 import com.solab.iso8583.IsoMessage;
 import com.solab.iso8583.IsoType;
 import com.solab.iso8583.MessageFactory;
-import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +35,20 @@ public class QueueListener {
         if (connectionInfo == null) {
             LOG.debug("Discarding: {}", message);
         } else {
-            sendResponse(connectionInfo.getChannelHandlerContext(), connectionInfo.getIsoMessage(), message.toUpperCase());
+            String text = message.toUpperCase();
+            final IsoMessage response = buildResponse(connectionInfo.getIsoMessage(), text);
+
+            LOG.debug("Responding to client: {}", text);
+            connectionInfo.getChannelHandlerContext().writeAndFlush(response);
         }
     }
 
-    public void sendResponse(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage, String text) {
+    private IsoMessage buildResponse(IsoMessage isoMessage, String text) {
         final IsoMessage response = messageFactory.createResponse(isoMessage);
         response.setField(39, IsoType.ALPHA.value("00", 2));
         response.setField(60, IsoType.LLLVAR.value("XXX", 3));
         response.setField(126, IsoType.LLLVAR.value(text, 16));
-
-        LOG.debug("Responding to client: {}", text);
-        channelHandlerContext.writeAndFlush(response);
+        return response;
     }
 
 }
