@@ -74,8 +74,9 @@ public class IsoClient {
         m.setValue(12, new Date(), IsoType.TIME, 0);
         m.setValue(15, new Date(), IsoType.DATE4, 0);
         m.setValue(17, new Date(), IsoType.DATE_EXP, 0);
-        m.setValue(37, numeric, IsoType.NUMERIC, 12);
-        m.setValue(41, text, IsoType.ALPHA, 16);
+        m.setValue(37, 127, IsoType.NUMERIC, 12);
+        m.setValue(41, String.valueOf(numeric), IsoType.ALPHA, 16);
+        m.setValue(43, text, IsoType.ALPHA, 40);
         return m;
     }
 

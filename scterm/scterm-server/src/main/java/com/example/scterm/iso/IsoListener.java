@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
+import java.util.Scanner;
 
 @Service
 public class IsoListener implements IsoMessageListener<IsoMessage> {
@@ -47,8 +48,9 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
     }
 
     private void dispatch(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
-        Long id = Long.valueOf((String) isoMessage.getField(37).getValue());
-        String text = (String) isoMessage.getField(41).getValue();
+        Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
+        Long id = scanner.nextLong();
+        String text = (String) isoMessage.getField(43).getValue();
 
         connectionManager.add(id, channelHandlerContext, isoMessage);
 
