@@ -80,7 +80,7 @@ public class SynchIsoClient {
         client.shutdown();
     }
 
-    public void sendMessage(String id, String text) {
+    public void sendAndWait(String id, String text) {
         IsoMessage message = buildMessage(factory, id, text);
         LOG.debug("Sending {} {}", id, text);
 

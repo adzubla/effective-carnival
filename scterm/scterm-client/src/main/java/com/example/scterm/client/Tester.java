@@ -51,7 +51,7 @@ public class Tester {
         LOG.info("Sending!");
         while (true) {
             for (int i = 0; i < NUM_CONNECTIONS; i++) {
-                clients[i].sendMessage(pid + "-" + i, "msg" + i);
+                clients[i].sendAndWait(pid + "-" + i, "msg" + i);
                 Thread.sleep(delay);
             }
         }
@@ -78,7 +78,7 @@ public class Tester {
             if ("q".equals(value)) {
                 break;
             }
-            client.sendMessage(pid + "-0", value);
+            client.sendAndWait(pid + "-0", value);
             Thread.sleep(100);
         }
     }
