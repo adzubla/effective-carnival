@@ -16,9 +16,15 @@ public class Tester {
 
     private static long pid;
 
+    private static String host;
+    private static int port;
+
     public static void main(String[] args) throws IOException, InterruptedException {
         pid = ProcessHandle.current().pid();
         LOG.info("PID={}", pid);
+
+        host = getEnv("SCTERM_HOST", "localhost");
+        port = Integer.parseInt(getEnv("SCTERM_PORT", "7777"));
 
         if (args.length > 0) {
             long delay = Long.parseLong(args[0]);
@@ -26,6 +32,11 @@ public class Tester {
         } else {
             prompt();
         }
+    }
+
+    private static String getEnv(String name, String defaultValue) {
+        String value = System.getenv(name);
+        return value == null ? defaultValue : value;
     }
 
     private static void multiClients(long delay) throws IOException, InterruptedException {
@@ -77,8 +88,8 @@ public class Tester {
 
     private static IsoClient buildIsoClient() throws IOException {
         IsoClient isoClient = new IsoClient();
-        isoClient.setHostname("scterm-server");
-        isoClient.setPort(7777);
+        isoClient.setHostname(host);
+        isoClient.setPort(port);
 
         isoClient.setListener(new IsoMessageListener<>() {
 
