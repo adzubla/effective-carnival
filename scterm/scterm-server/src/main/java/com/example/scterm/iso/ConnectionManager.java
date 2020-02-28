@@ -4,21 +4,22 @@ import com.solab.iso8583.IsoMessage;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class ConnectionManager {
 
-    private ConcurrentHashMap<ConnectionId, ConnectionInfo> map = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<ConnectionId, ConnectionData> map = new ConcurrentHashMap<>();
 
     public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
         if (map.containsKey(id)) {
             return;
         }
-        map.put(id, new ConnectionInfo(channelHandlerContext, isoMessage));
+        map.put(id, new ConnectionData(channelHandlerContext, isoMessage));
     }
 
-    public ConnectionInfo get(ConnectionId id) {
+    public ConnectionData get(ConnectionId id) {
         return map.get(id);
     }
 
@@ -26,11 +27,15 @@ public class ConnectionManager {
         map.remove(id);
     }
 
-    public static class ConnectionInfo {
+    public Collection<ConnectionData> list() {
+        return map.values();
+    }
+
+    public static class ConnectionData {
         private ChannelHandlerContext channelHandlerContext;
         private IsoMessage isoMessage;
 
-        public ConnectionInfo(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
+        public ConnectionData(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
             this.channelHandlerContext = channelHandlerContext;
             this.isoMessage = isoMessage;
         }

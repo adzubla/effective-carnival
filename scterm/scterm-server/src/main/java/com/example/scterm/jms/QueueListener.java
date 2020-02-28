@@ -30,16 +30,16 @@ public class QueueListener {
         Scanner scanner = new Scanner(message);
         ConnectionId id = new ConnectionId(scanner.next());
 
-        ConnectionManager.ConnectionInfo connectionInfo = connectionManager.get(id);
+        ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
-        if (connectionInfo == null) {
+        if (connectionData == null) {
             LOG.debug("Discarding: {}", message);
         } else {
             String text = scanner.next().toUpperCase();
-            final IsoMessage response = buildResponse(connectionInfo.getIsoMessage(), text);
+            final IsoMessage response = buildResponse(connectionData.getIsoMessage(), text);
 
             LOG.debug("Responding to client: {}", text);
-            connectionInfo.getChannelHandlerContext().writeAndFlush(response);
+            connectionData.getChannelHandlerContext().writeAndFlush(response);
         }
     }
 

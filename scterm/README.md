@@ -53,7 +53,9 @@
     cd scterm-server
     mvn clean install
     mvn dockerfile:build
+    kubectl apply -f k8s/scterm-server-deployment.yaml
     
     cd scterm-client
     mvn clean install
     mvn dockerfile:build
+    kubectl apply -f k8s/scterm-client-deployment.yaml
