@@ -1,5 +1,4 @@
-
-    eval $(minikube docker-env)
+# Local
 
 ## Inicar o docker registry local
 
@@ -27,4 +26,34 @@
 
 ## Deploy e execução do demo
 
+
+
+# Minikube
+
+
+## Criar cluster
+
+    minikube start --cpus 4 --memory 8192
+
     eval $(minikube docker-env)
+
+    kubectl apply -f k8s/config-reader.yaml
+    
+## Deploy IBM MQ
+
+    kubectl apply -f k8s/ibmmq-deployment.yaml
+    
+    https://192.168.99.123:32443/ibmmq/console/
+
+    User: admin
+    Password: passw0rd
+    
+## Build e deploy das aplicações
+
+    cd scterm-server
+    mvn clean install
+    mvn dockerfile:build
+    
+    cd scterm-client
+    mvn clean install
+    mvn dockerfile:build

@@ -4,7 +4,7 @@ metadata:
   name: scterm-server
 data:
   application.properties: |-
-    ibm.mq.connName=mq-deployment.default(1414)
+    ibm.mq.connName=ibmmq(1414)
 
 ---
 
@@ -34,11 +34,6 @@ spec:
           ports:
             - containerPort: 7777
               name: iso
-          env:
-            - name: LICENSE
-              value: accept
-            - name: MQ_QMGR_NAME
-              value: QM1
 
 ---
 

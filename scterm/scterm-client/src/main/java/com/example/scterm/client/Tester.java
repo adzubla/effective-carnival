@@ -77,7 +77,7 @@ public class Tester {
 
     private static IsoClient buildIsoClient() throws IOException {
         IsoClient isoClient = new IsoClient();
-        isoClient.setHostname("scterm-server.local");
+        isoClient.setHostname("scterm-server");
         isoClient.setPort(7777);
 
         isoClient.setListener(new IsoMessageListener<>() {

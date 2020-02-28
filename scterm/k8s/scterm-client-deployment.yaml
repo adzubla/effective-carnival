@@ -32,9 +32,7 @@ spec:
           image: localhost.localdomain:5000/scterm-client:1.0-SNAPSHOT
           imagePullPolicy: IfNotPresent
           env:
-            - name: LICENSE
-              value: accept
-            - name: MQ_QMGR_NAME
-              value: QM1
+            - name: DELAY
+              value: "1000"
 
 ---
