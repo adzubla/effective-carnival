@@ -7,8 +7,10 @@ import com.solab.iso8583.IsoType;
 import com.solab.iso8583.MessageFactory;
 import com.solab.iso8583.impl.SimpleTraceGenerator;
 import com.solab.iso8583.parse.ConfigParser;
+import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,17 +18,22 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 
-public class IsoClient {
-    private static Logger LOG = LoggerFactory.getLogger(IsoClient.class);
+/**
+ * Cliente sincrono para ISO-8583. Não é thread-safe.
+ */
+public class SynchIsoClient {
+    private static Logger LOG = LoggerFactory.getLogger(SynchIsoClient.class);
 
     private String hostname;
     private int port;
-    private IsoMessageListener<IsoMessage> listener;
     private MessageFactory<IsoMessage> factory;
     private Iso8583Client<IsoMessage> client;
 
-    public IsoClient() throws IOException {
+    private CountDownLatch latch;
+
+    public SynchIsoClient() throws IOException {
         factory = ConfigParser.createFromClasspathConfig("j8583-config.xml");
         factory.setCharacterEncoding(StandardCharsets.US_ASCII.name());
         factory.setUseBinaryMessages(false);
@@ -42,15 +49,26 @@ public class IsoClient {
         this.port = port;
     }
 
-    public void setListener(IsoMessageListener<IsoMessage> listener) {
-        this.listener = listener;
-    }
-
     public void connect() throws InterruptedException {
         SocketAddress socketAddress = new InetSocketAddress(hostname, port);
         client = new Iso8583Client<>(socketAddress, factory);
-        client.addMessageListener(listener);
-        //client.getConfiguration().replyOnError();
+
+        client.addMessageListener(new IsoMessageListener<>() {
+            @Override
+            public boolean applies(IsoMessage isoMessage) {
+                return isoMessage.getType() == 0x210;
+            }
+
+            @Override
+            public boolean onMessage(ChannelHandlerContext ctx, IsoMessage isoMessage) {
+                LOG.debug("onMessage: {} {}", ctx, isoMessage);
+                LOG.info("id: {} request: {} response: {}", isoMessage.getField(41).getValue(),
+                        isoMessage.getField(43).getValue(), isoMessage.getField(126).getValue());
+                latch.countDown();
+                return false;
+            }
+        });
+
         client.init();
         client.connect();
         if (!client.isConnected()) {
@@ -62,10 +80,28 @@ public class IsoClient {
         client.shutdown();
     }
 
-    public void sendMessage(String id, String text) throws InterruptedException {
+    public void sendMessage(String id, String text) {
         IsoMessage message = buildMessage(factory, id, text);
         LOG.debug("Sending {} {}", id, text);
-        client.send(message);
+
+        latch = new CountDownLatch(1);
+
+        StopWatch stopWatch = new StopWatch();
+
+        try {
+            stopWatch.start("send");
+            client.send(message);
+            stopWatch.stop();
+
+            stopWatch.start("response");
+            latch.await();
+            stopWatch.stop();
+
+            LOG.info("{}", stopWatch);
+        } catch (Throwable e) {
+            System.exit(1);
+        }
+
     }
 
     private IsoMessage buildMessage(MessageFactory<IsoMessage> messageFactory, String id, String text) {
