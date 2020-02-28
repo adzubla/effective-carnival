@@ -43,7 +43,7 @@
 
     kubectl apply -f k8s/ibmmq-deployment.yaml
     
-    https://192.168.99.123:32443/ibmmq/console/
+    https://$(minikube ip):32443/ibmmq/console/
 
     User: admin
     Password: passw0rd
