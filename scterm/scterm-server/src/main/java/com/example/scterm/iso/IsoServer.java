@@ -34,7 +34,6 @@ public class IsoServer {
         server = new Iso8583Server<>(7777, config, messageFactory);
 
         server.addMessageListener(listener);
-        //server.getConfiguration().replyOnError();
         server.init();
 
         LOG.info("Start...");

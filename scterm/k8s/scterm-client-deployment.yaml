@@ -28,6 +28,6 @@ spec:
             - name: SCTERM_PORT
               value: "7777"
             - name: DELAY
-              value: "1000"
+              value: "500"
 
 ---
