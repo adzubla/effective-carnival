@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.Scanner;
 
 @Service
@@ -24,19 +26,21 @@ public class QueueListener {
     private ConnectionManager connectionManager;
 
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "1")
-    public void receiveMessage(String message) {
-        LOG.debug("Received from queue: {}", message);
+    public void receiveMessage(String data) throws UnsupportedEncodingException, ParseException {
+        LOG.debug("Received from queue: {}", data);
 
-        Scanner scanner = new Scanner(message);
+        IsoMessage isoMessage = messageFactory.parseMessage(data.getBytes(), 0);
+
+        Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
         ConnectionId id = new ConnectionId(scanner.next());
 
         ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
         if (connectionData == null) {
-            LOG.debug("Discarding: {}", message);
+            LOG.debug("Discarding: {}", data);
         } else {
-            String text = scanner.next().toUpperCase();
-            final IsoMessage response = buildResponse(connectionData.getIsoMessage(), text);
+            String text = ((String) isoMessage.getField(43).getValue()).toUpperCase();
+            final IsoMessage response = buildResponse(isoMessage, text);
 
             LOG.debug("Responding to client: {}", text);
             connectionData.getChannelHandlerContext().writeAndFlush(response);

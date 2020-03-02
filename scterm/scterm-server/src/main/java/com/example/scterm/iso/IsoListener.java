@@ -50,14 +50,13 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
     private void dispatch(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
         Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
         ConnectionId id = new ConnectionId(scanner.next());
-        String text = (String) isoMessage.getField(43).getValue();
 
         connectionManager.add(id, channelHandlerContext, isoMessage);
 
         jmsTemplate.send("DEV.QUEUE.1", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                String s = id.getId() + " " + text;
+                String s = new String(isoMessage.writeData());
                 LOG.debug("Sending to queue: {}", s);
                 return session.createTextMessage(s);
             }
