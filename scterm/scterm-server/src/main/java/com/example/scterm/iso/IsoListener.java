@@ -51,7 +51,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
         Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
         ConnectionId id = new ConnectionId(scanner.next());
 
-        connectionManager.add(id, channelHandlerContext, isoMessage);
+        connectionManager.add(id, channelHandlerContext);
 
         jmsTemplate.send("DEV.QUEUE.1", new MessageCreator() {
             @Override

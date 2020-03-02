@@ -1,6 +1,5 @@
 package com.example.scterm.iso;
 
-import com.solab.iso8583.IsoMessage;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +12,8 @@ public class ConnectionManager {
 
     private ConcurrentHashMap<ConnectionId, ConnectionData> map = new ConcurrentHashMap<>();
 
-    public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
-        if (map.containsKey(id)) {
-            return;
-        }
-        map.put(id, new ConnectionData(id, channelHandlerContext, isoMessage));
+    public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
+        map.put(id, new ConnectionData(id, channelHandlerContext));
     }
 
     public ConnectionData get(ConnectionId id) {
@@ -33,32 +29,26 @@ public class ConnectionManager {
     }
 
     public static class ConnectionData {
-        private Instant creationTime;
         private ConnectionId id;
+        private Instant creationTime;
         private ChannelHandlerContext channelHandlerContext;
-        private IsoMessage isoMessage;
 
-        public ConnectionData(ConnectionId id, ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
-            this.creationTime = Instant.now();
+        public ConnectionData(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
             this.id = id;
+            this.creationTime = Instant.now();
             this.channelHandlerContext = channelHandlerContext;
-            this.isoMessage = isoMessage;
-        }
-
-        public Instant getCreationTime() {
-            return creationTime;
         }
 
         public ConnectionId getId() {
             return id;
         }
 
-        public ChannelHandlerContext getChannelHandlerContext() {
-            return channelHandlerContext;
+        public Instant getCreationTime() {
+            return creationTime;
         }
 
-        public IsoMessage getIsoMessage() {
-            return isoMessage;
+        public ChannelHandlerContext getChannelHandlerContext() {
+            return channelHandlerContext;
         }
     }
 
