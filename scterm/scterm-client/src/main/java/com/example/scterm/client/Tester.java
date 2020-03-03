@@ -24,8 +24,9 @@ public class Tester {
         port = Integer.parseInt(getEnv("SCTERM_PORT", "7777"));
 
         if (args.length > 0) {
-            long delay = Long.parseLong(args[0]);
-            multiClients(delay);
+            int numberClients = Integer.parseInt(args[0]);
+            long delay = Long.parseLong(args[1]);
+            multiClients(numberClients, delay);
         } else {
             prompt();
         }
@@ -34,27 +35,6 @@ public class Tester {
     private static String getEnv(String name, String defaultValue) {
         String value = System.getenv(name);
         return value == null ? defaultValue : value;
-    }
-
-    private static void multiClients(long delay) throws IOException, InterruptedException {
-        SynchIsoClient[] clients = new SynchIsoClient[NUM_CONNECTIONS];
-
-        for (int i = 0; i < NUM_CONNECTIONS; i++) {
-            LOG.info("Connection #" + i);
-            clients[i] = buildIsoClient();
-            clients[i].connect();
-        }
-        LOG.info("All connected!");
-
-        Thread.sleep(1000 * 2);
-
-        LOG.info("Sending!");
-        while (true) {
-            for (int i = 0; i < NUM_CONNECTIONS; i++) {
-                clients[i].sendAndWait(pid + "-" + i, "msg" + i);
-                Thread.sleep(delay);
-            }
-        }
     }
 
     private static void prompt() throws InterruptedException, IOException {
@@ -88,6 +68,47 @@ public class Tester {
         client.setHostname(host);
         client.setPort(port);
         return client;
+    }
+
+    private static void multiClients(int numberClients, long delay) throws InterruptedException {
+        for (int i = 0; i < numberClients; i++) {
+            Thread thread = new Thread(new Client(i, delay));
+            thread.start();
+        }
+
+        LOG.info("All created!");
+        Thread.sleep(1000 * 10000);
+        LOG.info("Fim!");
+    }
+
+    public static class Client implements Runnable {
+        private int num;
+        private long delay;
+
+        public Client(int i, long delay) {
+            num = i;
+            this.delay = delay;
+        }
+
+        @Override
+        public void run() {
+            LOG.info("Client #" + num);
+            try {
+                SynchIsoClient client = new SynchIsoClient();
+                client.setHostname(host);
+                client.setPort(port);
+                client.connect();
+
+                LOG.info("Sending!");
+                while (true) {
+                    client.sendAndWait(pid + "-" + num, "msg" + num);
+                    Thread.sleep(delay);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

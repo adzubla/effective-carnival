@@ -99,7 +99,7 @@ public class SynchIsoClient {
 
             LOG.info("{}", stopWatch);
         } catch (Throwable e) {
-            System.exit(1);
+            LOG.error("Erro no send", e);
         }
 
     }
