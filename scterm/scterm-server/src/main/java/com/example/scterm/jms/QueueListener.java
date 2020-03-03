@@ -29,9 +29,9 @@ public class QueueListener {
     public void receiveMessage(String data) throws UnsupportedEncodingException, ParseException {
         LOG.debug("Received from queue: {}", data);
 
-        IsoMessage isoMessage = messageFactory.parseMessage(data.getBytes(), 0);
+        IsoMessage receivedMessage = messageFactory.parseMessage(data.getBytes(), 0);
 
-        Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
+        Scanner scanner = new Scanner((String) receivedMessage.getField(41).getValue());
         ConnectionId id = new ConnectionId(scanner.next());
 
         ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
@@ -39,16 +39,16 @@ public class QueueListener {
         if (connectionData == null) {
             LOG.debug("Discarding: {}", data);
         } else {
-            String text = ((String) isoMessage.getField(43).getValue()).toUpperCase();
-            final IsoMessage response = buildResponse(isoMessage, text);
+            String text = ((String) receivedMessage.getField(43).getValue()).toUpperCase();
+            final IsoMessage responseMessage = buildResponse(receivedMessage, text);
 
             LOG.debug("Responding to client: {}", text);
-            connectionData.getChannelHandlerContext().writeAndFlush(response);
+            connectionData.getChannelHandlerContext().writeAndFlush(responseMessage);
         }
     }
 
-    private IsoMessage buildResponse(IsoMessage isoMessage, String text) {
-        final IsoMessage response = messageFactory.createResponse(isoMessage);
+    private IsoMessage buildResponse(IsoMessage original, String text) {
+        final IsoMessage response = messageFactory.createResponse(original);
         response.setField(39, IsoType.ALPHA.value("00", 2));
         response.setField(60, IsoType.LLLVAR.value("XXX", 3));
         response.setField(126, IsoType.LLLVAR.value(text));
