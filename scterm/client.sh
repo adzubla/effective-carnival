@@ -4,7 +4,7 @@ cd scterm-client || exit 1
 
 if [ $# != 0 ];
 then
-  ARGS="-Dexec.args=$@"
+  ARGS="-Dexec.args=$*"
 fi
 
 mvn exec:java "$ARGS"
