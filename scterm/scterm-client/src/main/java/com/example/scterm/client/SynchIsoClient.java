@@ -56,16 +56,24 @@ public class SynchIsoClient {
         client.addMessageListener(new IsoMessageListener<>() {
             @Override
             public boolean applies(IsoMessage isoMessage) {
-                return isoMessage.getType() == 0x210;
+                return isoMessage.getType() == 0x210 || isoMessage.getType() == 0x800;
             }
 
             @Override
             public boolean onMessage(ChannelHandlerContext ctx, IsoMessage isoMessage) {
                 LOG.debug("onMessage: {} {}", ctx, isoMessage);
-                LOG.info("id: {} request: {} response: {}", isoMessage.getField(41).getValue(),
-                        isoMessage.getField(43).getValue(), isoMessage.getField(126).getValue());
-                latch.countDown();
+                if (isoMessage.getType() == 0x800) {
+                    handleEcho(ctx, isoMessage);
+                } else {
+                    LOG.info("id: {} request: {} response: {}", isoMessage.getField(41).getValue(),
+                            isoMessage.getField(43).getValue(), isoMessage.getField(126).getValue());
+                    latch.countDown();
+                }
                 return false;
+            }
+
+            private void handleEcho(ChannelHandlerContext ctx, IsoMessage isoMessage) {
+                ctx.writeAndFlush(factory.createResponse(isoMessage));
             }
         });
 
