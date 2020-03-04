@@ -8,13 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.jms.annotation.EnableJms;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @SpringBootApplication
-@EnableScheduling
 @EnableJms
 public class ScTermApplication {
 

@@ -1,5 +1,6 @@
 package com.example.scterm.iso;
 
+import com.example.scterm.jms.ReplyToHolder;
 import com.github.kpavlov.jreactive8583.IsoMessageListener;
 import com.solab.iso8583.IsoMessage;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import java.util.Scanner;
 
 @Service
@@ -24,6 +26,9 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
 
     @Autowired
     private JmsTemplate jmsTemplate;
+
+    @Autowired
+    ReplyToHolder replyToHolder;
 
     @Override
     public boolean applies(IsoMessage isoMessage) {
@@ -48,8 +53,7 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
     }
 
     private void dispatch(ChannelHandlerContext channelHandlerContext, IsoMessage isoMessage) {
-        Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
-        ConnectionId id = new ConnectionId(scanner.next());
+        ConnectionId id = getConnectionId(isoMessage);
 
         connectionManager.add(id, channelHandlerContext);
 
@@ -57,10 +61,20 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 String s = new String(isoMessage.writeData());
+
                 LOG.debug("Sending to queue: {}", s);
-                return session.createTextMessage(s);
+                TextMessage message = session.createTextMessage(s);
+                message.setJMSReplyTo(replyToHolder.getReplyToQueue());
+                message.setJMSCorrelationID(id.getId());
+
+                return message;
             }
         });
+    }
+
+    private ConnectionId getConnectionId(IsoMessage isoMessage) {
+        Scanner scanner = new Scanner((String) isoMessage.getField(41).getValue());
+        return new ConnectionId(scanner.next());
     }
 
 }

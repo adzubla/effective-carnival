@@ -8,9 +8,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
+import javax.jms.*;
 
 @Service
 public class QueueListener {
@@ -20,13 +18,17 @@ public class QueueListener {
     private JmsTemplate jmsTemplate;
 
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "4")
-    public void receiveMessage(String data) {
+    public void receiveMessage(String data, Message message) throws JMSException {
         LOG.debug("Received from queue: {}", data);
 
-        jmsTemplate.send("DEV.QUEUE.2", new MessageCreator() {
+        Destination replyTo = message.getJMSReplyTo();
+
+        jmsTemplate.send(replyTo, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                return session.createTextMessage(data);
+                TextMessage textMessage = session.createTextMessage(data);
+                textMessage.setJMSCorrelationID(message.getJMSCorrelationID());
+                return textMessage;
             }
         });
     }
