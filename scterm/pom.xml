@@ -12,6 +12,7 @@
     <modules>
         <module>scterm-server</module>
         <module>scterm-client</module>
+        <module>responder</module>
     </modules>
 
 </project>

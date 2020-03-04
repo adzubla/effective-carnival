@@ -25,7 +25,7 @@ public class QueueListener {
     @Autowired
     private ConnectionManager connectionManager;
 
-    @JmsListener(destination = "DEV.QUEUE.1", concurrency = "1")
+    @JmsListener(destination = "DEV.QUEUE.2", concurrency = "1")
     public void receiveMessage(String data) throws UnsupportedEncodingException, ParseException {
         LOG.debug("Received from queue: {}", data);
 
