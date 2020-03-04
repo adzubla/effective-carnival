@@ -28,7 +28,7 @@ public class IsoServer {
     public void init() throws InterruptedException {
 
         ServerConfiguration config = ServerConfiguration.newBuilder()
-                .idleTimeout(30)
+                .idleTimeout(Integer.MAX_VALUE)
                 .build();
 
         server = new Iso8583Server<>(7777, config, messageFactory);
