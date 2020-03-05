@@ -105,7 +105,7 @@ public class SynchIsoClient {
             latch.await();
             stopWatch.stop();
 
-            LOG.info("{}", stopWatch);
+            LOG.info("{} seconds", stopWatch.getTotalTimeSeconds());
         } catch (Throwable e) {
             LOG.error("Erro no send", e);
         }
