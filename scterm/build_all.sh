@@ -8,5 +8,5 @@ mvn dockerfile:build
 cd ../scterm-client || exit 1
 mvn dockerfile:build
 
-cd ../responder || exit 1
+cd ../scterm-responder || exit 1
 mvn dockerfile:build

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: responder
+  name: scterm-responder
 data:
   application.properties: |-
     ibm.mq.connName=ibmmq(1414)
@@ -11,16 +11,16 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: responder-deployment
+  name: scterm-responder-deployment
 spec:
   selector:
     matchLabels:
-      app: responder
+      app: scterm-responder
   replicas: 1
   template:
     metadata:
       labels:
-        app: responder
+        app: scterm-responder
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8081"
@@ -28,8 +28,8 @@ spec:
         prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
-        - name: responder
-          image: localhost.localdomain:5000/responder:1.0-SNAPSHOT
+        - name: scterm-responder
+          image: localhost.localdomain:5000/scterm-responder:1.0-SNAPSHOT
           imagePullPolicy: IfNotPresent
 
 ---
