@@ -50,12 +50,8 @@
     
 ## Build e deploy das aplicações
 
-    cd scterm-server
-    mvn clean install
-    mvn dockerfile:build
+    ./build_all.sh
+
+    kubectl apply -f k8s/scterm-responder-deployment.yaml
     kubectl apply -f k8s/scterm-server-deployment.yaml
-    
-    cd scterm-client
-    mvn clean install
-    mvn dockerfile:build
     kubectl apply -f k8s/scterm-client-deployment.yaml
