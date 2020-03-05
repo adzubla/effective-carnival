@@ -12,4 +12,4 @@ then
   sleep "$STARTUP_WAIT_TIME"
 fi
 
-sh -c 'java $JAVA_OPTS -cp app:app/lib/* com.example.scterm.client.Tester $DELAY'
+sh -c 'java $JAVA_OPTS -cp app:app/lib/* com.example.scterm.client.Tester $CLIENTS $DELAY'

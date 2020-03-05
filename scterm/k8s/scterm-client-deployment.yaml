@@ -27,7 +27,9 @@ spec:
               value: "scterm-server"
             - name: SCTERM_PORT
               value: "7777"
+            - name: CLIENTS
+              value: "1"
             - name: DELAY
-              value: "500"
+              value: "1000"
 
 ---

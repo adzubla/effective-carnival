@@ -9,8 +9,6 @@ import java.util.Scanner;
 public class Tester {
     private static Logger LOG = LoggerFactory.getLogger(Tester.class);
 
-    private static final int NUM_CONNECTIONS = 50;
-
     private static long pid;
 
     private static String host;
