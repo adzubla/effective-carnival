@@ -16,6 +16,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
 
 @Service
 public class IsoListener implements IsoMessageListener<IsoMessage> {
@@ -30,6 +31,9 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
     @Autowired
     ReplyToHolder replyToHolder;
 
+    @Autowired
+    ExecutorService executorService;
+
     @Override
     public boolean applies(IsoMessage isoMessage) {
         LOG.trace("applies: {}", isoMessage);
@@ -41,10 +45,16 @@ public class IsoListener implements IsoMessageListener<IsoMessage> {
         LOG.trace("onMessage: {} {}", channelHandlerContext, isoMessage);
         LOG.debug("Received from client: {}", isoMessage.getField(41).getValue());
 
-        boolean ok = isMessageValid(isoMessage);
-        if (ok) {
-            dispatch(channelHandlerContext, isoMessage);
-        }
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean ok = isMessageValid(isoMessage);
+                if (ok) {
+                    dispatch(channelHandlerContext, isoMessage);
+                }
+            }
+        });
+
         return false;
     }
 
